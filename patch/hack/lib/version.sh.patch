@@ -1,0 +1,14 @@
+diff --git a/hack/lib/version.sh b/hack/lib/version.sh
+index f8dcc7b1..ebb6b2d1 100644
+--- a/hack/lib/version.sh
++++ b/hack/lib/version.sh
+@@ -61,7 +61,8 @@ kube::version::get_version_vars() {
+       if git_status=$("${git[@]}" status --porcelain 2>/dev/null) && [[ -z ${git_status} ]]; then
+         KUBE_GIT_TREE_STATE="clean"
+       else
+-        KUBE_GIT_TREE_STATE="dirty"
++        # KUBE_GIT_TREE_STATE="dirty"
++        KUBE_GIT_TREE_STATE="clean"
+       fi
+     fi
+ 

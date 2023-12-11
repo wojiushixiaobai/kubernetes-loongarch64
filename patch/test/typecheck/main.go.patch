@@ -1,0 +1,12 @@
+diff --git a/test/typecheck/main.go b/test/typecheck/main.go
+index eb213293..a78f4a15 100644
+--- a/test/typecheck/main.go
++++ b/test/typecheck/main.go
+@@ -52,6 +52,7 @@ var (
+ 		"linux/arm", "linux/386",
+ 		"windows/amd64", "linux/arm64",
+ 		"linux/ppc64le", "linux/s390x",
++		"linux/loong64",
+ 		"windows/arm64",
+ 	}
+ 

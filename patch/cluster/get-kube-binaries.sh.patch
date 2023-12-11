@@ -1,0 +1,34 @@
+diff --git a/cluster/get-kube-binaries.sh b/cluster/get-kube-binaries.sh
+index 13b916fd..a4cb1384 100755
+--- a/cluster/get-kube-binaries.sh
++++ b/cluster/get-kube-binaries.sh
+@@ -28,6 +28,7 @@
+ #    * arm64
+ #    * ppc64le
+ #    * s390x
++#    * loong64
+ #
+ #  Set KUBERNETES_CLIENT_OS to choose the client OS to download:
+ #    * current OS [default]
+@@ -42,6 +43,7 @@
+ #    * arm64
+ #    * ppc64le
+ #    * s390x
++#    * loong64
+ #    * windows
+ #
+ #  Set KUBERNETES_SKIP_CONFIRM to skip the installation confirmation prompt.
+@@ -120,9 +122,12 @@ function detect_client_info() {
+       s390x*)
+         CLIENT_ARCH="s390x"
+         ;;
++      loong64*)
++        CLIENT_ARCH='loong64'
++        ;;
+       *)
+         echo "Unknown, unsupported architecture (${machine})." >&2
+-        echo "Supported architectures x86_64, i686, arm, arm64, ppc64le, s390x." >&2
++        echo "Supported architectures x86_64, i686, arm, arm64, ppc64le, s390x, loong64." >&2
+         echo "Bailing out." >&2
+         exit 3
+         ;;

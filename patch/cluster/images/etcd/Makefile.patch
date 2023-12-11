@@ -1,0 +1,23 @@
+diff --git a/cluster/images/etcd/Makefile b/cluster/images/etcd/Makefile
+index 218073ce..57b7b4f6 100644
+--- a/cluster/images/etcd/Makefile
++++ b/cluster/images/etcd/Makefile
+@@ -51,7 +51,7 @@ OSVERSION ?= 1809
+ OUTPUT_TYPE ?= docker
+ 
+ ALL_OS = linux windows
+-ALL_ARCH.linux = amd64 arm arm64 ppc64le s390x
++ALL_ARCH.linux = amd64 arm arm64 ppc64le s390x loong64
+ ALL_OS_ARCH.linux = $(foreach arch, ${ALL_ARCH.linux}, linux-$(arch))
+ ALL_ARCH.windows = amd64
+ ALL_OSVERSIONS.windows := 1809 ltsc2022
+@@ -106,6 +106,9 @@ endif
+ ifeq ($(ARCH),s390x)
+     BASEIMAGE?=registry.k8s.io/build-image/debian-base-s390x:bookworm-v1.0.0
+ endif
++ifeq ($(ARCH),loong64)
++    BASEIMAGE?=registry.k8s.io/build-image/debian-base-loong64:bookworm-v1.0.0
++endif
+ 
+ BASE.windows = mcr.microsoft.com/windows/nanoserver
+ 

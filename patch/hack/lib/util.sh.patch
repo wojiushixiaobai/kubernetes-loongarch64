@@ -1,0 +1,20 @@
+diff --git a/hack/lib/util.sh b/hack/lib/util.sh
+index 70568f76..394aeb40 100755
+--- a/hack/lib/util.sh
++++ b/hack/lib/util.sh
+@@ -185,8 +185,14 @@ kube::util::host_arch() {
+     ppc64le*)
+       host_arch=ppc64le
+       ;;
++    loong64*)
++      host_arch=loong64
++      ;;
++    loongarch64*)
++      host_arch=loong64
++      ;;
+     *)
+-      kube::log::error "Unsupported host arch. Must be x86_64, 386, arm, arm64, s390x or ppc64le."
++      kube::log::error "Unsupported host arch. Must be x86_64, 386, arm, arm64, s390x, ppc64le or loong64."
+       exit 1
+       ;;
+   esac
