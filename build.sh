@@ -21,18 +21,18 @@ for command in wget tar git docker jq make rsync; do
 done
 
 # http://ftp.loongnix.cn/toolchain/golang/go-1.20/abi1.0/go1.20.6.linux-loong64.tar.gz
-GOVERSION=1.20.6
-GO_MAJOR_VERSION=1.20
+GOVERSION=1.21.5
+GO_MAJOR_VERSION=1.21
 
 if [ -d "/opt/golang/${GOVERSION}/go" ]; then
     echo "Golang ${GOVERSION} is already installed"
 else
     echo "Installing Golang ${GOVERSION}"
-    mkdir -p /opt/golang
+    mkdir -p /opt/golang/${GOVERSION}
     wget -qO /opt/golang/go${GOVERSION}.linux-loong64.tar.gz http://ftp.loongnix.cn/toolchain/golang/go-${GO_MAJOR_VERSION}/abi1.0/go${GOVERSION}.linux-loong64.tar.gz
-    tar xf /opt/golang/go${GOVERSION}.linux-loong64.tar.gz -C /opt/golang
+    tar xf /opt/golang/go${GOVERSION}.linux-loong64.tar.gz -C /opt/golang/${GOVERSION}
 fi
-export PATH=/opt/golang/1.20.6/go/bin:$PATH
+export PATH=/opt/golang/${GOVERSION}/go/bin:$PATH
 
 mkdir -p dist/
 
