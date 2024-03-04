@@ -48,7 +48,7 @@ git clone -b ${KUBERNETES_VERSION} --depth 1 https://github.com/kubernetes/kuber
 cp -R patch ${TMPDIR}/patch
 
 # build images
-BASEIMAGE=registry.k8s.io/build-image/debian-base-loong64:bookworm-v1.0.0
+BASEIMAGE=registry.k8s.io/build-image/debian-base-loong64:bookworm-v1.0.1
 DEBIAN_BASE_VERSION=${BASEIMAGE#*:}
 
 KUBE_CROSS_IMAGE=registry.k8s.io/build-image/kube-cross
