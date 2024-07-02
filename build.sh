@@ -21,18 +21,23 @@ for command in wget tar git docker jq make rsync; do
 done
 
 # http://ftp.loongnix.cn/toolchain/golang/go-1.20/abi1.0/go1.20.6.linux-loong64.tar.gz
-GOVERSION=1.22.0
+GOVERSION=1.22.4
 # GO_MAJOR_VERSION=1.22
 GO_MAJOR_VERSION=$(echo ${GOVERSION} | cut -d. -f1,2)
 
+mkdir -p /opt/golang/${GOVERSION}
 if [ -d "/opt/golang/${GOVERSION}/go" ]; then
-    echo "Golang ${GOVERSION} is already installed"
-else
-    echo "Installing Golang ${GOVERSION}"
-    mkdir -p /opt/golang/${GOVERSION}
-    wget -qO /opt/golang/go${GOVERSION}.linux-loong64.tar.gz http://ftp.loongnix.cn/toolchain/golang/go-${GO_MAJOR_VERSION}/abi1.0/go${GOVERSION}.linux-loong64.tar.gz
-    tar xf /opt/golang/go${GOVERSION}.linux-loong64.tar.gz -C /opt/golang/${GOVERSION}
+    rm -rf /opt/golang/${GOVERSION}/go
 fi
+if [ ! -f "/opt/golang/go${GOVERSION}.linux-loong64.tar.gz" ]; then
+    wget -qO /opt/golang/go${GOVERSION}.linux-loong64.tar.gz http://ftp.loongnix.cn/toolchain/golang/go-${GO_MAJOR_VERSION}/abi1.0/go${GOVERSION}.linux-loong64.tar.gz || {
+        echo "Failed to download Golang ${GOVERSION}"
+        exit 1
+    }
+fi
+echo "Installing Golang ${GOVERSION}"
+tar xf /opt/golang/go${GOVERSION}.linux-loong64.tar.gz -C /opt/golang/${GOVERSION}
+
 export PATH=/opt/golang/${GOVERSION}/go/bin:$PATH
 
 mkdir -p dist/
@@ -49,8 +54,8 @@ git clone -b ${KUBERNETES_VERSION} --depth 1 https://github.com/kubernetes/kuber
 cp -R patch ${TMPDIR}/patch
 
 # build images
-BASEIMAGE=registry.k8s.io/build-image/debian-base-loong64:bookworm-v1.0.2
-DEBIAN_BASE_VERSION=${BASEIMAGE#*:}
+DEBIAN_BASE_VERSION=$(grep "BASEIMAGE?=" ${TMPDIR}/kubernetes/cluster/images/etcd/Makefile | head -1 | cut -d ":" -f2-)
+BASEIMAGE=registry.k8s.io/build-image/debian-base-loong64:${DEBIAN_BASE_VERSION}
 
 KUBE_CROSS_IMAGE=registry.k8s.io/build-image/kube-cross
 KUBE_CROSS_VERSION=$(cat ${TMPDIR}/kubernetes/build/build-image/cross/VERSION)
@@ -67,6 +72,9 @@ SETCAPIMAGE=${SETCAP_IMAGE}:${SETCAP_VERSION}
 DISTROLESS_IPTABLES_IMAGE=registry.k8s.io/build-image/distroless-iptables
 DISTROLESS_IPTABLES_VERSION=$(cat ${TMPDIR}/kubernetes/build/common.sh | grep distroless_iptables_version= | sed 's/.*=//')
 IPTABLEIMAGE=${DISTROLESS_IPTABLES_IMAGE}:${DISTROLESS_IPTABLES_VERSION}
+
+sed -i "s@debian-base-s390x:.*@debian-base-s390x:${DEBIAN_BASE_VERSION}@g" ${TMPDIR}/patch/cluster/images/etcd/Makefile.patch
+sed -i "s@debian-base-loong64:.*@debian-base-loong64:${DEBIAN_BASE_VERSION}@g" ${TMPDIR}/patch/cluster/images/etcd/Makefile.patch
 
 echo "Checking images ...."
 echo "Checking image from $BASEIMAGE"
